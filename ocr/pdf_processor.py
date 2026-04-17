@@ -26,21 +26,12 @@ async def extract_text_from_pdf(file_path: str) -> str:
     Returns:
         Extracted text from all pages, joined with double newlines.
     """
-    # TODO: implement this
-    # Step 1: convert PDF pages to images (blocking — use asyncio.to_thread)
-    #   images = await asyncio.to_thread(convert_from_path, file_path)
-    #
-    # Step 2: save each PIL image to a temp file so Tesseract can read it
-    #   with tempfile.TemporaryDirectory() as tmpdir:
-    #       paths = []
-    #       for i, img in enumerate(images):
-    #           p = Path(tmpdir) / f"page_{i}.png"
-    #           img.save(str(p))
-    #           paths.append(str(p))
-    #
-    # Step 3: run OCR on ALL pages concurrently using asyncio.gather
-    #   pages = await asyncio.gather(*[extract_text_from_image(p) for p in paths])
-    #
-    # Step 4: join all page texts with "\n\n"
-    #   return "\n\n".join(pages)
-    raise NotImplementedError("implement extract_text_from_pdf")
+    images = await asyncio.to_thread(convert_from_path, file_path)
+    with tempfile.TemporaryDirectory() as tmpdir:
+        paths = []
+        for i, img in enumerate(images):
+            p = Path(tmpdir) / f"page_{i}.png"
+            img.save(str(p))
+            paths.append(str(p))
+        pages = await asyncio.gather(*[extract_text_from_image(p) for p in paths])
+    return "\n\n".join(pages)

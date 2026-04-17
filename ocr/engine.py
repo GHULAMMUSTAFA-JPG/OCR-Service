@@ -21,10 +21,6 @@ async def extract_text_from_image(file_path: str) -> str:
     Returns:
         Extracted text as a string. Empty string if no text found.
     """
-    # TODO: implement this
-    # Step 1: open the image
-    #   image = Image.open(file_path)
-    # Step 2: run Tesseract in a thread (non-blocking)
-    #   text = await asyncio.to_thread(pytesseract.image_to_string, image)
-    # Step 3: return the text
-    raise NotImplementedError("implement extract_text_from_image")
+    image = Image.open(file_path)
+    text = await asyncio.to_thread(pytesseract.image_to_string, image)
+    return text
