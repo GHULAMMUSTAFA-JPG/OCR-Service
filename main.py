@@ -5,6 +5,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from core.config import settings
 from db.client import db
 from api.routes import auth
+from api.routes import upload, requests as req_routes
 from api.deps import get_current_user
 from watcher.api_stream import watch_completions
 from websockets.manager import manager
@@ -30,6 +31,8 @@ app.add_middleware(
 )
 
 app.include_router(auth.router)
+app.include_router(upload.router)
+app.include_router(req_routes.router)
 
 @app.websocket("/ws/{request_id}")
 async def websocket_endpoint(request_id: str, ws: WebSocket):
